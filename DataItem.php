@@ -17,7 +17,6 @@ class DataItem
 		$this->date = $date;
 		$this->rev = $rev;
 		$this->viewTime = $viewTime;
-	}
-
-	
+	}	
 }
+?>

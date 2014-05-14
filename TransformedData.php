@@ -28,6 +28,8 @@ class TransformedData
 
 	public function orderBy($orderByArray)
 	{
+		if (!isset($orderByArray[0]) || $orderByArray[0] == "") return; // If no order by, do dothing
+
 		// Lowercase all fields
 		for($i = 0; $i < sizeof($orderByArray); $i++)
 		{
@@ -49,7 +51,7 @@ class TransformedData
 				$j--;
 			}
 
-			if (isset($orderByArray[1]) && $this->data[$j - 1]->$orderByArray[0] == $dataItem->$orderByArray[0]) // Items have the same value for first sort option
+			if ((isset($orderByArray[1]) && $orderByArray[1] != "") && $this->data[$j - 1]->$orderByArray[0] == $dataItem->$orderByArray[0]) // Items have the same value for first sort option
 			{
 				$k = $j;
 

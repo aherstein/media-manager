@@ -34,6 +34,6 @@ $transformedData = new TransformedData($data); // Initialize data array for tran
 
 // Execute data transformations
 $transformedData->filter($filterString);
-if ($groupByFields[0] != "") $transformedData->aggregation($selectFields, $aggregateFields, $groupByFields[0]);
+$transformedData->aggregation($selectFields, $aggregateFields, $groupByFields[0]);
 $transformedData->orderBy($orderByFields);
 $transformedData->printSelect($selectFields);

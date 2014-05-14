@@ -109,16 +109,6 @@ class TransformedData
 			}
 		}
 
-		// Merge the ANDed arrays together
-		// for ($i = 0; $i < count($transformedData); $i++)
-		// {
-		// 	for ($j = 0; $j < count($transformedData[$i]); $j++)
-		// 	{
-		// 		$dataItemToMatch = $transformedData[$i][$j];
-		// 		for ($k = i + 1; $k < count($transformedData[$i]); $k++)
-		// 	}
-		// }
-
 		if (count($transformedData) == 1) // If there is only one AND portion, then there no arrays to merge. Just write the first filtered array.
 		{
 			$this->data = $transformedData[0];
@@ -142,6 +132,9 @@ class TransformedData
 	// Aggregation functions and aggregation helper functions
 	////////////////////////////////////////////////////////////////////////////////
 
+	/**
+	 * Function to process what kind of aggregator per field to run.
+	 */
 	function aggregation($selectFields, $aggregateFields, $groupByField)
 	{
 		// Check to see if selected fields and aggregate fields have the same length, and if not, do nothing.
@@ -231,7 +224,9 @@ class TransformedData
 		return $transformedData;
 	}
 
-
+	/**
+	 * Function to calculate the minumum value for a given field.
+	 */
 	protected function aggregateMin($selectField, $groupByField)
 	{
 		// Check for group by field
@@ -261,7 +256,9 @@ class TransformedData
 	}
 
 
-
+	/**
+	 * Function to calculate the maximum value for a given field.
+	 */
 	protected function aggregateMax($selectField, $groupByField)
 	{
 		// Check for group by field
@@ -291,7 +288,9 @@ class TransformedData
 	}
 
 
-
+	/**
+	 * Function to calculate the sum of all values for a given field.
+	 */
 	protected function aggregateSum($selectField, $groupByField)
 	{
 		// Check for group by field
@@ -319,13 +318,22 @@ class TransformedData
 	}
 
 
-
+	/**
+	 * Function to calculate the unique count for a given field.
+	 */
 	protected function aggregateCount($selectField, $groupByField)
 	{
 		// Check for group by field
 		if ($groupByField == "")
 		{
 			echo "Group by parameter is required for aggregate functions!\n";
+			return;
+		}
+
+		// Check for group by field
+		if ($selectField != $groupByField)
+		{
+			echo "Group by parameter must be same as the field to get counts for!\n";
 			return;
 		}
 
@@ -347,7 +355,9 @@ class TransformedData
 	}
 
 
-
+	/**
+	 * Function to calculate the unique values for a given field.
+	 */
 	protected function aggregateCollect($selectField, $groupByField)
 	{
 		// Check for group by field

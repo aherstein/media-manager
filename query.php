@@ -5,12 +5,12 @@ require_once("TransformedData.php");
 // Initialize the data class
 $data = new Data(PATH_TO_DATA_FILE);
 
-$options = getopt("s::o::f::g::");
+$options = getopt("s::o::f::g::"); // Get options from command line
 
 // Check for valid input
 if (sizeof($options) == 0)
 {
-	die("Usage: php query.php -sFIELDS,TO,SELECT -oFIELDS,TO,ORDER,BY -fFIELD=VALUE\n");
+	die("Usage: php query.php -sFIELDS,TO,SELECT:optional-aggregate-function -gGROUPBY -oFIELDS,TO,ORDER,BY -fFIELD=VALUE\n");
 }
 
 $selectFieldsAll = explode(",", $options[s]); // Get select options.
@@ -31,7 +31,8 @@ $groupByFields = explode(",", $options[g]); // Get group by options.
 
 $transformedData = new TransformedData($data); // Initialize data array for transformations (SELECT, ORDER BY, FILTER
 
-$transformedData->filter($filterFields);
-$transformedData->aggregation($selectFields, $aggregateFields, $groupByFields[0]);
+// Execute data transformations
+if ($filterFields[0] != "") $transformedData->filter($filterFields);
+if ($groupByFields[0] != "") $transformedData->aggregation($selectFields, $aggregateFields, $groupByFields[0]);
 $transformedData->orderBy($orderByFields);
 $transformedData->printSelect($selectFields);

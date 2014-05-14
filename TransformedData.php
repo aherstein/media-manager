@@ -97,6 +97,9 @@ class TransformedData
 		$this->data = $transformedData;
 	}
 
+	////////////////////////////////////////////////////////////////////////////////
+	// Aggregation functions and helper functions
+	////////////////////////////////////////////////////////////////////////////////
 
 	function aggregation($selectFields, $aggregateFields, $groupByField)
 	{
@@ -160,11 +163,13 @@ class TransformedData
 				}
 			}
 		}
-		// print_r($aggregatedData);
+
 		$this->data = $aggregatedData; // Set global data array to the result of the aggregation and merge.
 	}
 
-
+	/**
+	 * Takes in the resulting map from an aggregate function and creates a list of DataItems for outputting
+	 */
 	protected static function buildAggregateData($groupByField, $selectField, $map)
 	{
 		$transformedData = array();

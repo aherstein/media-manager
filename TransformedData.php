@@ -49,7 +49,7 @@ class TransformedData
 				$j--;
 			}
 
-			if ($this->data[$j - 1]->$orderByArray[0] == $dataItem->$orderByArray[0]) // Items have the same value for first sort option
+			if (isset($orderByArray[1]) && $this->data[$j - 1]->$orderByArray[0] == $dataItem->$orderByArray[0]) // Items have the same value for first sort option
 			{
 				$k = $j;
 

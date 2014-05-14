@@ -10,7 +10,7 @@ $options = getopt("s::o::f::g::"); // Get options from command line
 // Check for valid input
 if (sizeof($options) == 0)
 {
-	die("Usage: php query.php -sFIELDS,TO,SELECT:optional-aggregate-function -gGROUPBY -oFIELDS,TO,ORDER,BY -fFIELD=VALUE\n");
+	die("Usage: php query.php -sFIELDS,TO,SELECT:optional-aggregate-function -gGROUPBY -oFIELDS,TO,ORDER,BY -f'FIELD=VALUE AND/OR FIELD2=VALUE2'\n");
 }
 
 $selectFieldsAll = explode(",", $options[s]); // Get select options.
@@ -26,13 +26,14 @@ for ($i = 0; $i < count($selectFieldsAll); $i++)
 }
 
 $orderByFields = explode(",", $options[o]); // Get order by options.
-$filterFields = explode(",", $options[f]); // Get filter options.
+// $filterFields = explode(",", $options[f]); // Get filter options.
+$filterString = $options[f];
 $groupByFields = explode(",", $options[g]); // Get group by options.
 
 $transformedData = new TransformedData($data); // Initialize data array for transformations (SELECT, ORDER BY, FILTER
 
 // Execute data transformations
-if ($filterFields[0] != "") $transformedData->filter($filterFields);
+$transformedData->filter($filterString);
 if ($groupByFields[0] != "") $transformedData->aggregation($selectFields, $aggregateFields, $groupByFields[0]);
 $transformedData->orderBy($orderByFields);
 $transformedData->printSelect($selectFields);

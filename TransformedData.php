@@ -72,25 +72,34 @@ class TransformedData
 	/**
 	 * @param $filterArray array format [FILTER=VALUE, FILTER=VALUE, etc.]
 	 */
-	public function filter($filterArray)
+	public function filter($filterString)
 	{
-		if (count($filterArray) == 0 || $filterArray[0] == "") return; // Nothing to filter by
+		if ($filterString == "") return; // Nothing to filter by
+
+		// Parse boolean filter
+		$filterPartsAnd = explode(" AND ", $filterString);
+		print_r($filterPartsAnd);
 
 		$transformedData = array(); // Initialize array to add objects that match the criteria to
 
 		foreach ($this->data as $dataItem)
 		{
-			foreach ($filterArray as $filterItem)
+			foreach ($filterPartsAnd as $filterItem)
 			{
-				// Parse filter string
-				$filterExploded = explode("=", $filterItem);
-				$filterName = strtolower($filterExploded[0]);
-				$filterValue = $filterExploded[1];
-
-				if ($dataItem->$filterName == $filterValue)
+				$filterPartsOr = explode(" OR ", $filterString);
+				foreach ($filterPartsOr as $filterItem)
 				{
-					array_push($transformedData, $dataItem);
-					break;
+					print_r($filterPartsOr);
+					// Parse filter string
+					$filterExploded = explode("=", $filterItem);
+					$filterName = strtolower($filterExploded[0]);
+					$filterValue = str_replace("\"", "", $filterExploded[1]); // Remove quotes
+
+					if ($dataItem->$filterName == $filterValue)
+					{
+						array_push($transformedData, $dataItem);
+						break;
+					}
 				}
 			}
 		}

@@ -34,27 +34,8 @@ class DataItem
 		$returnArray = array();
 		foreach ($fields as $field)
 		{
-			switch (strtolower($field))
-			{
-				case "stb":
-					array_push($returnArray, $this->stb);
-					break;
-				case "title":
-					array_push($returnArray, $this->title);
-					break;
-				case "provider":
-					array_push($returnArray, $this->provider);
-					break;
-				case "date":
-					array_push($returnArray, $this->date);
-					break;
-				case "rev":
-					array_push($returnArray, $this->rev);
-					break;
-				case "viewTime":
-					array_push($returnArray, $this->viewTime);
-					break;
-			}
+			$field = strtolower($field);
+			array_push($returnArray, $this->$field);
 		}
 		return implode("|", $returnArray);
 	}

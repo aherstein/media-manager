@@ -1,0 +1,24 @@
+To import data: php import <filename>
+	Data importer by default uses data.txt as its data store. It will be created if it doesn't exist.
+	The path to the data file can be changed in include.php.
+
+To run a query: php query.php <options>
+	SELECT:
+		-sFIELDS,TO,SELECT:<optional aggregate function>
+		 Aggregate functions can be added to any fields with a colon (:) character after the name.
+		 Aggregation functions include:
+		    min
+		    max
+		    sum
+		    count
+		    collect
+	GROUP BY (required for aggregate functions):
+		-gGROUPBY-FIELD
+	ORDER BY:
+		-oFIELDS,TO,ORDER,BY
+	FILTER:
+		-f'FIELD=VALUE AND/OR FIELD2=VALUE2'
+
+	Make sure there is no space between the option letter and the parameter.
+
+PHP version: 5.4.24

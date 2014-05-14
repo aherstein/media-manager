@@ -8,6 +8,8 @@ class DataItem
 	public $date;
 	public $rev;
 	public $viewTime;
+	public $count;
+	public $collect;
 
 	function __construct($stb = "", $title = "", $provider = "", $date = "", $rev = "", $viewTime = "")
 	{
@@ -43,6 +45,19 @@ class DataItem
 			$field = strtolower($field);
 			array_push($returnArray, $this->$field);
 		}
+
+		// Add count value if it has been set
+		if ($this->count != "")
+		{
+			array_push($returnArray, $this->count);
+		}
+
+		// Add collect value if it has been set
+		if ($this->collect != "")
+		{
+			array_push($returnArray, $this->collect);
+		}
+
 		return implode("|", $returnArray) . "\n";
 	}
 

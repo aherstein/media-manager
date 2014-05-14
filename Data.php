@@ -7,7 +7,7 @@ class Data
 
 
 	/**
-	 * @param $pathToDataFile
+	 * Constructor. Initializes data file.
 	 */
 	function __construct($pathToDataFile)
 	{
@@ -22,7 +22,6 @@ class Data
 
 	/**
 	 * Gets raw data from data file
-	 * @return string
 	 */
 	function __toString()
 	{
@@ -32,9 +31,8 @@ class Data
 
 	/**
 	 * Converts the data in the data file to an array for parsing
-	 * @return array
 	 */
-	private function dataAsArray()
+	public function toArray()
 	{
 		$dataArray = array(); // Initialize data array
 
@@ -54,14 +52,14 @@ class Data
 
 
 
-	/** Records in the datastore should be unique by STB, TITLE and DATE
+	/**
+	 * Records in the datastore should be unique by STB, TITLE and DATE
 	 *
-	 * @param DataItem $dataItemToCheck
 	 * @returns false if no duplicate, otherwise returns duplicate item already existing in data
 	 */
 	private function isDuplicate(DataItem $dataItemToCheck)
 	{
-		foreach ($this->dataAsArray() as $dataItemInData)
+		foreach ($this->toArray() as $dataItemInData)
 		{
 			if (
 				$dataItemToCheck->stb == $dataItemInData->stb &&
@@ -79,13 +77,10 @@ class Data
 
 	/**
 	 * Overwrites a data item if it exists.
-	 *
-	 * @param DataItem $dataItemToDelete
-	 * @param DataItem $dataItemToWrite
 	 */
 	private function overwriteData(DataItem $dataItemToDelete, DataItem $dataItemToWrite)
 	{
-		foreach ($this->dataAsArray() as $dataItem)
+		foreach ($this->toArray() as $dataItem)
 		{
 			if ($dataItem == $dataItemToDelete)
 			{
@@ -101,8 +96,6 @@ class Data
 
 	/**
 	 * Adds a single item to the data file
-	 *
-	 * @param DataItem $dataItem
 	 */
 	public function addDataItem(DataItem $dataItem)
 	{

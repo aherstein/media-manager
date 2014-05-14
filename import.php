@@ -1,10 +1,5 @@
 <?php
-require_once("DataItem.php");
-require_once("Data.php");
-
-define("PATH_TO_DATA_FILE", "data.txt");
-
-
+require_once("include.php");
 
 // Initialize the data class
 $data = new Data(PATH_TO_DATA_FILE);

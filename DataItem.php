@@ -24,6 +24,46 @@ class DataItem
 		return $this->stb . "|" . $this->title . "|" . $this->provider . "|" . $this->date . "|" . $this->rev . "|" . $this->viewTime;
 	}
 
+
+	/**
+	 * @param array $fields Array of fields to select from this object
+	 * @returns string representation of object with selected fields
+	 */
+	public function select($fields)
+	{
+		$returnArray = array();
+		foreach ($fields as $field)
+		{
+			switch (strtolower($field))
+			{
+				case "stb":
+					array_push($returnArray, $this->stb);
+					break;
+				case "title":
+					array_push($returnArray, $this->title);
+					break;
+				case "provider":
+					array_push($returnArray, $this->provider);
+					break;
+				case "date":
+					array_push($returnArray, $this->date);
+					break;
+				case "rev":
+					array_push($returnArray, $this->rev);
+					break;
+				case "viewTime":
+					array_push($returnArray, $this->viewTime);
+					break;
+			}
+		}
+		return implode("|", $returnArray);
+	}
+
+
+	/**
+	 * Converts pipe separated values to internal DataItem object
+	 * @return DataItem
+	 */
 	public static function lineToObject($lineText)
 	{
 		$lineArray = explode("|", $lineText);

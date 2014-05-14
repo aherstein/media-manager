@@ -4,20 +4,7 @@ require_once("Data.php");
 
 define("PATH_TO_DATA_FILE", "data.txt");
 
-function lineToObject($lineText)
-{
-	$lineArray = explode("|", $lineText);
-	$dataObject = new DataItem(
-		$lineArray[0], // stb
-		$lineArray[1], // title
-		$lineArray[2], // provider
-		$lineArray[3], // date
-		$lineArray[4], // rev
-		$lineArray[5] // viewTime
-	);
 
-	return $dataObject;
-}
 
 // Initialize the data class
 $data = new Data(PATH_TO_DATA_FILE);
@@ -39,17 +26,12 @@ if (!file_exists($inputFileName))
 
 $inputFileArray = file($inputFileName); // Get input file by line
 
-// Process input file into native object
-$inputDataItems = array();
+// Process input file into native object and add to data file
+$totalProcessed = 0;
 foreach ($inputFileArray as $inputFileLine)
 {
-	array_push($inputDataItems, lineToObject($inputFileLine));
+	$data->addDataItem(DataItem::lineToObject($inputFileLine));
+	$totalProcessed++;
 }
 
-// Add items to data file
-foreach($inputDataItems as $inputDataItem)
-{
-	$data->addData($inputDataItem);
-}
-
-echo count($inputDataItems) . " items processed.\n";
+echo "$totalProcessed items processed.\n";

@@ -36,7 +36,7 @@ class TransformedData
 			$orderByArray[$i] = strtolower($orderByArray[$i]);
 		}
 
-//		// Sort the array
+		// Sort the array
 		for ($i = 0; $i < count($this->data); $i++)
 		{
 			$dataItem = $this->data[$i];
@@ -118,8 +118,16 @@ class TransformedData
 		// 		for ($k = i + 1; $k < count($transformedData[$i]); $k++)
 		// 	}
 		// }
-		$transformedData = call_user_func_array('array_intersect', $transformedData); // Calls the array intersect function with an arbritrary number of arrays
-		$this->data = $transformedData;
+		$transformedDataAnded = call_user_func_array('array_intersect', $transformedData); // Calls the array intersect function with an arbritrary number of arrays
+
+		// The merged data comes back with keys preserved, which throws off the sorting function, so we need to reset the indices
+		$transformedDataIndicesFixed = array();
+		foreach ($transformedDataAnded as $dataItem)
+		{
+			array_push($transformedDataIndicesFixed, $dataItem);
+		}
+
+		$this->data = $transformedDataIndicesFixed;
 	}
 
 	////////////////////////////////////////////////////////////////////////////////

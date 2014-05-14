@@ -17,6 +17,11 @@ class DataItem
 		$this->date = $date;
 		$this->rev = $rev;
 		$this->viewTime = $viewTime;
-	}	
+	}
+
+	function __toString()
+	{
+		return $this->stb . "|" . $this->title . "|" . $this->provider . "|" . $this->date . "|" . $this->rev . "|" . $this->viewTime;
+	}
 }
 ?>

@@ -76,20 +76,25 @@ class TransformedData
 	{
 		if ($filterString == "") return; // Nothing to filter by
 
-		// Parse boolean filter
-		$filterPartsAnd = explode(" AND ", $filterString);
-		print_r($filterPartsAnd);
+		$filterPartsAnd = explode(" AND ", $filterString); // Parse boolean filter for AND
 
-		$transformedData = array(); // Initialize array to add objects that match the criteria to
+		// Initialize array to add objects that match the criteria to
+		$transformedData = array();
+		for ($i = 0; $i < count($filterPartsAnd); $i++)
+		{ 
+			$transformedData[$i] = array();
+		}
 
+		// Loop though the generated array of ANDs and ORs, calculating the OR portions.
+		// Each AND section gets put into a separate array to be merged later.
 		foreach ($this->data as $dataItem)
 		{
-			foreach ($filterPartsAnd as $filterItem)
+			for ($i = 0; $i < count($filterPartsAnd); $i++)
 			{
-				$filterPartsOr = explode(" OR ", $filterString);
+				$filterPartsOr = explode(" OR ", $filterPartsAnd[$i]);  // Parse boolean filter for OR
+
 				foreach ($filterPartsOr as $filterItem)
 				{
-					print_r($filterPartsOr);
 					// Parse filter string
 					$filterExploded = explode("=", $filterItem);
 					$filterName = strtolower($filterExploded[0]);
@@ -97,17 +102,28 @@ class TransformedData
 
 					if ($dataItem->$filterName == $filterValue)
 					{
-						array_push($transformedData, $dataItem);
+						array_push($transformedData[$i], $dataItem);
 						break;
 					}
 				}
 			}
 		}
+
+		// Merge the ANDed arrays together
+		// for ($i = 0; $i < count($transformedData); $i++)
+		// {
+		// 	for ($j = 0; $j < count($transformedData[$i]); $j++)
+		// 	{
+		// 		$dataItemToMatch = $transformedData[$i][$j];
+		// 		for ($k = i + 1; $k < count($transformedData[$i]); $k++)
+		// 	}
+		// }
+		$transformedData = call_user_func_array('array_intersect', $transformedData); // Calls the array intersect function with an arbritrary number of arrays
 		$this->data = $transformedData;
 	}
 
 	////////////////////////////////////////////////////////////////////////////////
-	// Aggregation functions and helper functions
+	// Aggregation functions and aggregation helper functions
 	////////////////////////////////////////////////////////////////////////////////
 
 	function aggregation($selectFields, $aggregateFields, $groupByField)

@@ -109,25 +109,27 @@ class TransformedData
 
 		$groupByField = strtolower($groupByField); // Lowercase field name
 
+		$aggregatedDataIterations = array(); // Initialize array for storing aggregated data iterations
+
 		for($i = 0; $i < count($selectFields); $i++)
 		{
 			$selectField = strtolower($selectFields[$i]); // Lowercase field name
 			switch (strtolower($aggregateFields[$i]))
 			{
 				case "min":
-					$this->aggregateMin($selectField, $groupByField);
+					array_push($aggregatedDataIterations, $this->aggregateMin($selectField, $groupByField));
 					break;
 				case "max":
-					$this->aggregateMax($selectField, $groupByField);
+					array_push($aggregatedDataIterations, $this->aggregateMax($selectField, $groupByField));
 					break;
 				case "sum":
-					$this->aggregateSum($selectField, $groupByField);
+					array_push($aggregatedDataIterations, $this->aggregateSum($selectField, $groupByField));
 					break;
 				case "count":
-					$this->aggregateCount($selectField, $groupByField);
+					array_push($aggregatedDataIterations, $this->aggregateCount($selectField, $groupByField));
 					break;
 				case "collect":
-					$this->aggregateCollect($selectField, $groupByField);
+					array_push($aggregatedDataIterations, $this->aggregateCollect($selectField, $groupByField));
 					break;
 				case "":
 					break;
@@ -135,6 +137,31 @@ class TransformedData
 					echo "Invalid aggregate function!";
 			}
 		}
+
+		// Merge aggregated data sets together
+
+		// Initialize merged array
+		$aggregatedData = array();
+		for ($i = 0; $i < count($aggregatedDataIterations[0]); $i++)
+		{ 
+			$aggregatedData[$i] = new DataItem();
+		}
+
+		for($i = 0; $i < count($aggregatedDataIterations); $i++)
+		{
+			for($j = 0; $j < count($aggregatedDataIterations[$i]); $j++)
+			{
+				foreach (array("stb","title","provider","date","rev","viewtime","count") as $field)
+				{
+					if ($aggregatedDataIterations[$i][$j]->$field != "")
+					{
+						$aggregatedData[$j]->$field = $aggregatedDataIterations[$i][$j]->$field;
+					}
+				}
+			}
+		}
+		// print_r($aggregatedData);
+		$this->data = $aggregatedData; // Set global data array to the result of the aggregation and merge.
 	}
 
 
@@ -145,6 +172,12 @@ class TransformedData
 		$col2 = array_values($map);
 		for ($i = 0; $i < count($map); $i++)
 		{
+			// Build string for collect field
+			if (is_array($col2[$i]))
+			{
+				$col2[$i] = "[" . implode(",", $col2[$i]) . "]";
+			}
+
 			$transformedData[$i] = new DataItem();
 			$transformedData[$i]->$groupByField = $col1[$i];
 			$transformedData[$i]->$selectField = $col2[$i];
@@ -178,7 +211,7 @@ class TransformedData
 			}
 		}
 		
-		$this->data = TransformedData::buildAggregateData($groupByField, $selectField, $map);
+		return TransformedData::buildAggregateData($groupByField, $selectField, $map);
 	}
 
 
@@ -208,7 +241,7 @@ class TransformedData
 			}
 		}
 		
-		$this->data = TransformedData::buildAggregateData($groupByField, $selectField, $map);
+		return TransformedData::buildAggregateData($groupByField, $selectField, $map);
 	}
 
 
@@ -236,7 +269,7 @@ class TransformedData
 			}
 		}
 		
-		$this->data = TransformedData::buildAggregateData($groupByField, $selectField, $map);
+		return TransformedData::buildAggregateData($groupByField, $selectField, $map);
 	}
 
 
@@ -264,7 +297,7 @@ class TransformedData
 			}
 		}
 		
-		$this->data = TransformedData::buildAggregateData($groupByField, "count", $map);
+		return TransformedData::buildAggregateData($groupByField, "count", $map);
 	}
 
 
@@ -283,8 +316,7 @@ class TransformedData
 		{
 			if (isset($map[$this->data[$i]->$groupByField]))
 			{
-				echo in_array($this->data[$i]->$selectField, $map[$this->data[$i]->$groupByField]);
-				if (!in_array($this->data[$i]->$selectField, $map[$this->data[$i]->$groupByField]));
+				if (!in_array($this->data[$i]->$selectField, $map[$this->data[$i]->$groupByField]))
 				{
 					array_push($map[$this->data[$i]->$groupByField], $this->data[$i]->$selectField);
 				}
@@ -295,9 +327,7 @@ class TransformedData
 				array_push($map[$this->data[$i]->$groupByField], $this->data[$i]->$selectField);
 			}
 		}
-
-		print_r($map);
 		
-		$this->data = TransformedData::buildAggregateData($groupByField, "count", $map);
+		return TransformedData::buildAggregateData($groupByField, $selectField, $map);
 	}
 } 

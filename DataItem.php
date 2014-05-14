@@ -7,23 +7,22 @@ class DataItem
 	public $provider;
 	public $date;
 	public $rev;
-	public $viewTime;
+	public $viewtime;
 	public $count;
-	public $collect;
 
-	function __construct($stb = "", $title = "", $provider = "", $date = "", $rev = "", $viewTime = "")
+	function __construct($stb = "", $title = "", $provider = "", $date = "", $rev = "", $viewtime = "")
 	{
-		$this->stb = $stb;
-		$this->title = $title;
-		$this->provider = $provider;
-		$this->date = $date;
-		$this->rev = $rev;
-		$this->viewTime = $viewTime;
+		$this->stb = trim($stb);
+		$this->title = trim($title);
+		$this->provider = trim($provider);
+		$this->date = trim($date);
+		$this->rev = trim($rev);
+		$this->viewtime = trim($viewtime);
 	}
 
 	function __toString()
 	{
-		return $this->stb . "|" . $this->title . "|" . $this->provider . "|" . $this->date . "|" . $this->rev . "|" . $this->viewTime;
+		return $this->stb . "|" . $this->title . "|" . $this->provider . "|" . $this->date . "|" . $this->rev . "|" . $this->viewtime;
 	}
 
 
@@ -52,12 +51,6 @@ class DataItem
 			array_push($returnArray, $this->count);
 		}
 
-		// Add collect value if it has been set
-		if ($this->collect != "")
-		{
-			array_push($returnArray, $this->collect);
-		}
-
 		return implode("|", $returnArray) . "\n";
 	}
 
@@ -75,7 +68,7 @@ class DataItem
 			$lineArray[2], // provider
 			$lineArray[3], // date
 			$lineArray[4], // rev
-			$lineArray[5] // viewTime
+			$lineArray[5] // viewtime
 		);
 
 		return $dataObject;

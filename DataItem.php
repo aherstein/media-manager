@@ -38,11 +38,19 @@ class DataItem
 			return (string) $this;
 		}
 
+		// Add the selected items to a new array for returning
 		$returnArray = array();
 		foreach ($fields as $field)
 		{
 			$field = strtolower($field);
-			array_push($returnArray, $this->$field);
+			if (DataItem::isMoney($field))
+			{
+				array_push($returnArray, number_format($this->$field, 2)); // Format to two decimal places for monetary fields.
+			}
+			else
+			{
+				array_push($returnArray, $this->$field);
+			}
 		}
 
 		// Add count value if it has been set
@@ -52,6 +60,12 @@ class DataItem
 		}
 
 		return implode(",", $returnArray) . "\n";
+	}
+
+
+	protected static function isMoney($fieldName)
+	{
+		return ($fieldName == "rev");
 	}
 
 

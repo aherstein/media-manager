@@ -22,7 +22,7 @@ class DataItem
 
 	function __toString()
 	{
-		return $this->stb . "|" . $this->title . "|" . $this->provider . "|" . $this->date . "|" . $this->rev . "|" . $this->viewtime;
+		return $this->stb . "," . $this->title . "," . $this->provider . "," . $this->date . "," . $this->rev . "," . $this->viewtime;
 	}
 
 
@@ -51,7 +51,7 @@ class DataItem
 			array_push($returnArray, $this->count);
 		}
 
-		return implode("|", $returnArray) . "\n";
+		return implode(",", $returnArray) . "\n";
 	}
 
 

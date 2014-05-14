@@ -118,16 +118,24 @@ class TransformedData
 		// 		for ($k = i + 1; $k < count($transformedData[$i]); $k++)
 		// 	}
 		// }
-		$transformedDataAnded = call_user_func_array('array_intersect', $transformedData); // Calls the array intersect function with an arbritrary number of arrays
 
-		// The merged data comes back with keys preserved, which throws off the sorting function, so we need to reset the indices
-		$transformedDataIndicesFixed = array();
-		foreach ($transformedDataAnded as $dataItem)
+		if (count($transformedData) == 1) // If there is only one AND portion, then there no arrays to merge. Just write the first filtered array.
 		{
-			array_push($transformedDataIndicesFixed, $dataItem);
+			$this->data = $transformedData[0];
 		}
+		else
+		{
+			$transformedDataAnded = call_user_func_array('array_intersect', $transformedData); // Calls the array intersect function with an arbritrary number of arrays
 
-		$this->data = $transformedDataIndicesFixed;
+			// The merged data comes back with keys preserved, which throws off the sorting function, so we need to reset the indices
+			$transformedDataIndicesFixed = array();
+			foreach ($transformedDataAnded as $dataItem)
+			{
+				array_push($transformedDataIndicesFixed, $dataItem);
+			}
+
+			$this->data = $transformedDataIndicesFixed;
+		}
 	}
 
 	////////////////////////////////////////////////////////////////////////////////

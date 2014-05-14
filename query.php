@@ -14,8 +14,11 @@ if (sizeof($options) == 0)
 }
 
 $selectFields = explode(",", $options[s]); // Get select options.
-
+$orderByFields = explode(",", $options[o]); // Get order by options.
+$filterFields = explode(",", $options[f]); // Get filter options.
 
 $transformedData = new TransformedData($data); // Initialize data array for transformations (SELECT, ORDER BY, FILTER
 
+$transformedData->filter($filterFields);
+$transformedData->orderBy($orderByFields);
 $transformedData->printSelect($selectFields);

@@ -31,13 +31,19 @@ class DataItem
 	 */
 	public function select($fields)
 	{
+		// If no fields were provided to select, or user passed in a * character, then select all
+		if (sizeof($fields) == 0 || $fields[0] == "" || $fields[0] == "*")
+		{
+			return (string) $this;
+		}
+
 		$returnArray = array();
 		foreach ($fields as $field)
 		{
 			$field = strtolower($field);
 			array_push($returnArray, $this->$field);
 		}
-		return implode("|", $returnArray);
+		return implode("|", $returnArray) . "\n";
 	}
 
 

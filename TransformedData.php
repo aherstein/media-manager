@@ -144,6 +144,17 @@ class TransformedData
 			return;
 		}
 
+		// Check if there are any aggregation parameters
+		$aggregationParametersExist = false;
+		foreach ($aggregateFields as $aggregateField)
+		{
+			$aggregationParametersExist = $aggregateField != "";
+		}
+		if (!$aggregationParametersExist)
+		{
+			return;
+		}
+
 		$groupByField = strtolower($groupByField); // Lowercase field name
 
 		$aggregatedDataIterations = array(); // Initialize array for storing aggregated data iterations

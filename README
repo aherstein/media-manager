@@ -1,8 +1,10 @@
-To import data: php import <filename>
+To import data:
+	php import <filename>
 	Data importer by default uses data.txt as its data store. It will be created if it doesn't exist.
 	The path to the data file can be changed in include.php.
 
-To run a query: php query.php <options>
+To run a query:
+	php query.php <options>
 	SELECT:
 		-sFIELDS,TO,SELECT:<optional aggregate function>
 		 Aggregate functions can be added to any fields with a colon (:) character after the name.
@@ -13,7 +15,7 @@ To run a query: php query.php <options>
 		    count
 		    collect
 	GROUP BY (required for aggregate functions):
-		-gGROUPBY-FIELD
+		-gGROUPBYFIELD
 	ORDER BY:
 		-oFIELDS,TO,ORDER,BY
 	FILTER:

@@ -13,7 +13,7 @@ if (sizeof($options) == 0)
 	die("Usage: php query.php -sFIELDS,TO,SELECT:optional-aggregate-function -gGROUPBY -oFIELDS,TO,ORDER,BY -f'FIELD=VALUE AND/OR FIELD2=VALUE2'\n");
 }
 
-$selectFieldsAll = explode(",", $options[s]); // Get select options.
+$selectFieldsAll = explode(",", $options['s']); // Get select options.
 
 // Split select by aggregate functions
 $selectFields = array();
@@ -25,10 +25,10 @@ for ($i = 0; $i < count($selectFieldsAll); $i++)
 	$aggregateFields[$i] = $split[1];
 }
 
-$orderByFields = explode(",", $options[o]); // Get order by options.
+$orderByFields = explode(",", $options['o']); // Get order by options.
 // $filterFields = explode(",", $options[f]); // Get filter options.
-$filterString = $options[f];
-$groupByFields = explode(",", $options[g]); // Get group by options.
+$filterString = $options['f'];
+$groupByFields = explode(",", $options['g']); // Get group by options.
 
 $transformedData = new TransformedData($data); // Initialize data array for transformations (SELECT, ORDER BY, FILTER
 
@@ -37,3 +37,4 @@ $transformedData->filter($filterString);
 $transformedData->aggregation($selectFields, $aggregateFields, $groupByFields[0]);
 $transformedData->orderBy($orderByFields);
 $transformedData->printSelect($selectFields);
+

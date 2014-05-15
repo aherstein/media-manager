@@ -22,7 +22,7 @@ class DataItem
 
 	function __toString()
 	{
-		return $this->stb . "," . $this->title . "," . $this->provider . "," . $this->date . "," . $this->rev . "," . $this->viewtime;
+		return $this->stb . "|" . $this->title . "|" . $this->provider . "|" . $this->date . "|" . $this->rev . "|" . $this->viewtime;
 	}
 
 
@@ -70,7 +70,7 @@ class DataItem
 
 
 	/**
-	 * Converts pipe separated values to internal DataItem object
+	 * Converts comma separated values to internal DataItem object
 	 * @return DataItem
 	 */
 	public static function lineToObject($lineText)

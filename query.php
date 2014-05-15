@@ -25,8 +25,12 @@ for ($i = 0; $i < count($selectFieldsAll); $i++)
 	$aggregateFields[$i] = $split[1];
 }
 
+if ($selectFields[0] == "" && count($selectFields) == 1) // No fields were selected
+{
+	die("No fields were selected. Make sure there is no space between the option letter and the parameter. e.g. -sTITLE,DATE\n");
+}
+
 $orderByFields = explode(",", $options['o']); // Get order by options.
-// $filterFields = explode(",", $options[f]); // Get filter options.
 $filterString = $options['f'];
 $groupByFields = explode(",", $options['g']); // Get group by options.
 

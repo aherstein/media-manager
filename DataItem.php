@@ -10,6 +10,9 @@ class DataItem
 	public $viewtime;
 	public $count;
 
+	/**
+	 * Create new object based on fields
+	 */
 	function __construct($stb = "", $title = "", $provider = "", $date = "", $rev = "", $viewtime = "")
 	{
 		$this->stb = trim($stb);
@@ -20,6 +23,10 @@ class DataItem
 		$this->viewtime = trim($viewtime);
 	}
 
+
+	/**
+	 * Convert to pipe-delimited string
+	 */
 	function __toString()
 	{
 		return $this->stb . "|" . $this->title . "|" . $this->provider . "|" . $this->date . "|" . $this->rev . "|" . $this->viewtime;
@@ -35,7 +42,7 @@ class DataItem
 		// If no fields were provided to select, or user passed in a * character, then select all
 		if (sizeof($fields) == 0 || $fields[0] == "" || $fields[0] == "*")
 		{
-			return (string) $this;
+			return (string) $this . "\n";
 		}
 
 		// Add the selected items to a new array for returning
@@ -43,13 +50,16 @@ class DataItem
 		foreach ($fields as $field)
 		{
 			$field = strtolower($field);
-			if (DataItem::isMoney($field))
+			if ($this->$field != "") // Don't add field if it is empty
 			{
-				array_push($returnArray, number_format($this->$field, 2)); // Format to two decimal places for monetary fields.
-			}
-			else
-			{
-				array_push($returnArray, $this->$field);
+				if (DataItem::isMoney($field))
+				{
+					array_push($returnArray, number_format($this->$field, 2)); // Format to two decimal places for monetary fields.
+				}
+				else
+				{
+					array_push($returnArray, $this->$field);
+				}
 			}
 		}
 

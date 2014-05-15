@@ -6,13 +6,17 @@ class TransformedData
 	protected $data = array();
 
 
+	/**
+	 * @param Data $data Data object returned from the Data class, which in turn comes from the raw file.
+	 */
 	function __construct(Data $data)
 	{
 		$this->data = $data->toArray();
 	}
 
-
+	////////////////////////////////////////////////////////////////////////////////
 	// Transform functions (SELECT, ORDER BY, FILTER)
+	////////////////////////////////////////////////////////////////////////////////
 
 	/**
 	 * Prints out the transformed data based on selected fields passed in.
@@ -26,12 +30,16 @@ class TransformedData
 	}
 
 
+	/**
+	 * Sorts the data array using insertion sort. If two elements are the same, sort by the second field.
+	 * @param $orderByArray Fields to order by (Maximum of two)
+	 */
 	public function orderBy($orderByArray)
 	{
 		if (!isset($orderByArray[0]) || $orderByArray[0] == "") return; // If no order by, do dothing
 
 		// Lowercase all fields
-		for($i = 0; $i < count($orderByArray); $i++)
+		for ($i = 0; $i < count($orderByArray); $i++)
 		{
 			$orderByArray[$i] = strtolower($orderByArray[$i]);
 		}
@@ -70,7 +78,8 @@ class TransformedData
 
 
 	/**
-	 * @param $filterArray array format [FILTER=VALUE, FILTER=VALUE, etc.]
+	 * Filter the results based on a boolen string (e.g. THIS=THAT AND THESE=THOSE OR THEY=THEM)
+	 * @param $filterString string Boolean string for filtering
 	 */
 	public function filter($filterString)
 	{
@@ -81,7 +90,7 @@ class TransformedData
 		// Initialize array to add objects that match the criteria to
 		$transformedData = array();
 		for ($i = 0; $i < count($filterPartsAnd); $i++)
-		{ 
+		{
 			$transformedData[$i] = array();
 		}
 
@@ -91,7 +100,7 @@ class TransformedData
 		{
 			for ($i = 0; $i < count($filterPartsAnd); $i++)
 			{
-				$filterPartsOr = explode(" OR ", $filterPartsAnd[$i]);  // Parse boolean filter for OR
+				$filterPartsOr = explode(" OR ", $filterPartsAnd[$i]); // Parse boolean filter for OR
 
 				foreach ($filterPartsOr as $filterItem)
 				{
@@ -102,7 +111,7 @@ class TransformedData
 
 					if ($dataItem->$filterName == $filterValue)
 					{
-						array_push($transformedData[$i], $dataItem);
+						array_push($transformedData[$i], $dataItem); // Match – add it to the array
 						break;
 					}
 				}
@@ -115,7 +124,7 @@ class TransformedData
 		}
 		else
 		{
-			$transformedDataAnded = call_user_func_array('array_intersect', $transformedData); // Calls the array intersect function with an arbritrary number of arrays
+			$transformedDataAnded = call_user_func_array('array_intersect', $transformedData); // Calls the array intersect function with an arbitrary number of arrays
 
 			// The merged data comes back with keys preserved, which throws off the sorting function, so we need to reset the indices
 			$transformedDataIndicesFixed = array();
@@ -141,6 +150,7 @@ class TransformedData
 		if (count($selectFields) != count($aggregateFields))
 		{
 			echo "Invalid parameters for aggregation!\n";
+
 			return;
 		}
 
@@ -159,7 +169,7 @@ class TransformedData
 
 		$aggregatedDataIterations = array(); // Initialize array for storing aggregated data iterations
 
-		for($i = 0; $i < count($selectFields); $i++)
+		for ($i = 0; $i < count($selectFields); $i++)
 		{
 			$selectField = strtolower($selectFields[$i]); // Lowercase field name
 			switch (strtolower($aggregateFields[$i]))
@@ -186,20 +196,19 @@ class TransformedData
 			}
 		}
 
-		// Merge aggregated data sets together
-
 		// Initialize merged array
 		$aggregatedData = array();
 		for ($i = 0; $i < count($aggregatedDataIterations[0]); $i++)
-		{ 
+		{
 			$aggregatedData[$i] = new DataItem();
 		}
 
-		for($i = 0; $i < count($aggregatedDataIterations); $i++)
+		// Merge aggregated data sets together
+		for ($i = 0; $i < count($aggregatedDataIterations); $i++)
 		{
-			for($j = 0; $j < count($aggregatedDataIterations[$i]); $j++)
+			for ($j = 0; $j < count($aggregatedDataIterations[$i]); $j++)
 			{
-				foreach (array("stb","title","provider","date","rev","viewtime","count") as $field)
+				foreach (array("stb", "title", "provider", "date", "rev", "viewtime", "count") as $field)
 				{
 					if ($aggregatedDataIterations[$i][$j]->$field != "")
 					{
@@ -211,6 +220,7 @@ class TransformedData
 
 		$this->data = $aggregatedData; // Set global data array to the result of the aggregation and merge.
 	}
+
 
 	/**
 	 * Takes in the resulting map from an aggregate function and creates a list of DataItems for outputting
@@ -232,11 +242,13 @@ class TransformedData
 			$transformedData[$i]->$groupByField = $col1[$i];
 			$transformedData[$i]->$selectField = $col2[$i];
 		}
+
 		return $transformedData;
 	}
 
+
 	/**
-	 * Function to calculate the minumum value for a given field.
+	 * Function to calculate the minimum value for a given field.
 	 */
 	protected function aggregateMin($selectField, $groupByField)
 	{
@@ -244,25 +256,26 @@ class TransformedData
 		if ($groupByField == "")
 		{
 			echo "Group by parameter is required for aggregate functions!\n";
+
 			return;
 		}
 
-		$map = array();
+		$map = array(); // Initialize map for keeping track of mins
 		for ($i = 0; $i < count($this->data); $i++)
 		{
-			if (isset($map[$this->data[$i]->$groupByField]))
+			if (isset($map[$this->data[$i]->$groupByField])) // Field already exists in map
 			{
-				if ($this->data[$i]->$selectField < $map[$this->data[$i]->$groupByField])
+				if ($this->data[$i]->$selectField < $map[$this->data[$i]->$groupByField]) // Incoming value is less than existing value
 				{
-					$map[$this->data[$i]->$groupByField] = $this->data[$i]->$selectField;
+					$map[$this->data[$i]->$groupByField] = $this->data[$i]->$selectField; // Overwrite existing value with new min
 				}
 			}
 			else
 			{
-				$map[$this->data[$i]->$groupByField] = $this->data[$i]->$selectField;
+				$map[$this->data[$i]->$groupByField] = $this->data[$i]->$selectField; // field doesn't exist – add it
 			}
 		}
-		
+
 		return TransformedData::buildAggregateData($groupByField, $selectField, $map);
 	}
 
@@ -276,25 +289,26 @@ class TransformedData
 		if ($groupByField == "")
 		{
 			echo "Group by parameter is required for aggregate functions!\n";
+
 			return;
 		}
 
-		$map = array();
+		$map = array(); // Initialize map for keeping track of maxes
 		for ($i = 0; $i < count($this->data); $i++)
 		{
-			if (isset($map[$this->data[$i]->$groupByField]))
+			if (isset($map[$this->data[$i]->$groupByField])) // Field already exists in map
 			{
-				if ($this->data[$i]->$selectField > $map[$this->data[$i]->$groupByField])
+				if ($this->data[$i]->$selectField > $map[$this->data[$i]->$groupByField]) // Incoming value is greater than existing value
 				{
-					$map[$this->data[$i]->$groupByField] = $this->data[$i]->$selectField;
+					$map[$this->data[$i]->$groupByField] = $this->data[$i]->$selectField; // Overwrite existing value with new min
 				}
 			}
 			else
 			{
-				$map[$this->data[$i]->$groupByField] = $this->data[$i]->$selectField;
+				$map[$this->data[$i]->$groupByField] = $this->data[$i]->$selectField; // field doesn't exist – add it
 			}
 		}
-		
+
 		return TransformedData::buildAggregateData($groupByField, $selectField, $map);
 	}
 
@@ -308,23 +322,23 @@ class TransformedData
 		if ($groupByField == "")
 		{
 			echo "Group by parameter is required for aggregate functions!\n";
+
 			return;
 		}
 
-		$map = array();
+		$map = array(); // Initialize map for keeping track of sums
 		for ($i = 0; $i < count($this->data); $i++)
 		{
-			if (isset($map[$this->data[$i]->$groupByField]))
+			if (isset($map[$this->data[$i]->$groupByField])) // Field already exists in map
 			{
-				
-				$map[$this->data[$i]->$groupByField] += $this->data[$i]->$selectField;
+				$map[$this->data[$i]->$groupByField] += $this->data[$i]->$selectField; // Add incoming value to existing value
 			}
 			else
 			{
-				$map[$this->data[$i]->$groupByField] = $this->data[$i]->$selectField;
+				$map[$this->data[$i]->$groupByField] = $this->data[$i]->$selectField; // field doesn't exist – add it
 			}
 		}
-		
+
 		return TransformedData::buildAggregateData($groupByField, $selectField, $map);
 	}
 
@@ -338,30 +352,31 @@ class TransformedData
 		if ($groupByField == "")
 		{
 			echo "Group by parameter is required for aggregate functions!\n";
+
 			return;
 		}
 
 		// Check for group by field
 		if ($selectField != $groupByField)
 		{
-			echo "Group by parameter must be same as the field to get counts for!\n";
+			die("Group by parameter must be same as the field to get counts for!\n");
+
 			return;
 		}
 
-		$map = array();
+		$map = array(); // Initialize map for keeping track of counts
 		for ($i = 0; $i < count($this->data); $i++)
 		{
-			if (isset($map[$this->data[$i]->$groupByField]))
+			if (isset($map[$this->data[$i]->$groupByField])) // Field already exists in map
 			{
-				
-				$map[$this->data[$i]->$groupByField]++;
+				$map[$this->data[$i]->$groupByField]++;// Add one to existing value
 			}
 			else
 			{
-				$map[$this->data[$i]->$groupByField] = 1;
+				$map[$this->data[$i]->$groupByField] = 1; // field doesn't exist – add it and initialize to 1
 			}
 		}
-		
+
 		return TransformedData::buildAggregateData($groupByField, "count", $map);
 	}
 
@@ -375,26 +390,28 @@ class TransformedData
 		if ($groupByField == "")
 		{
 			echo "Group by parameter is required for aggregate functions!\n";
+
 			return;
 		}
 
-		$map = array();
+		$map = array(); // Initialize map for keeping track of collects
 		for ($i = 0; $i < count($this->data); $i++)
 		{
-			if (isset($map[$this->data[$i]->$groupByField]))
+			if (isset($map[$this->data[$i]->$groupByField])) // Field already exists in map
 			{
-				if (!in_array($this->data[$i]->$selectField, $map[$this->data[$i]->$groupByField]))
+				if (!in_array($this->data[$i]->$selectField, $map[$this->data[$i]->$groupByField])) // Field doesn't already exist in unique values list
 				{
-					array_push($map[$this->data[$i]->$groupByField], $this->data[$i]->$selectField);
+					array_push($map[$this->data[$i]->$groupByField], $this->data[$i]->$selectField); // Add to array.
 				}
 			}
 			else
 			{
+				// field doesn't exist – initialize array and add it.
 				$map[$this->data[$i]->$groupByField] = array();
 				array_push($map[$this->data[$i]->$groupByField], $this->data[$i]->$selectField);
 			}
 		}
-		
+
 		return TransformedData::buildAggregateData($groupByField, $selectField, $map);
 	}
 } 

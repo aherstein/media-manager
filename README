@@ -5,6 +5,8 @@ To import data:
 
 To run a query:
 	php query.php <options>
+	***Make sure there is no space between the option letter and the parameter. e.g. -sTITLE,DATE***
+
 	SELECT:
 		-sFIELDS,TO,SELECT:<optional aggregate function>
 		 Aggregate functions can be added to any fields with a colon (:) character after the name.
@@ -20,7 +22,5 @@ To run a query:
 		-oFIELDS,TO,ORDER,BY
 	FILTER:
 		-f'FIELD=VALUE AND/OR FIELD2=VALUE2'
-
-	Make sure there is no space between the option letter and the parameter.
 
 PHP version: 5.4.24

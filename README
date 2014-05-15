@@ -25,10 +25,11 @@ To run a query:
 
 PHP version: 5.4.24
 
-For this coding challenge, I chose to use PHP, since it works well in the command line. In addition to the import and
-query scripts, I implemented a few classes:
+For this coding challenge, I chose to use PHP, since it works well in the command line. In addition
+to the import and query scripts, I implemented a few classes:
 	Data: for accessing the raw data file and converting it into object format
 	DataItem: for representing a single data item
-	TransformedData: for non-destructively modifying the data in a series of transformations. Each query type
-		(select, order by, filter, aggregation, etc.) is executed as an independent transformation that modifies a
-		temporary data object. When the select function is called, the data is printed to the screen.
+	TransformedData: for non-destructively modifying the data in a series of transformations. Each
+		query type (select, order by, filter, aggregation, etc.) is executed as an independent
+		transformation that modifies a temporary data object. When the select function is called, the
+		data is printed to the screen.

@@ -18,6 +18,8 @@ To run a query:
 		    collect
 	GROUP BY (required for aggregate functions):
 		-gGROUPBYFIELD
+		Supports a maximum of one group by field. If non-aggregated fields are selected that don't 
+		match the group by field, they will be dropped form the results.
 	ORDER BY:
 		-oFIELDS,TO,ORDER,BY
 	FILTER:

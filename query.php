@@ -31,7 +31,7 @@ if ($selectFields[0] == "" && count($selectFields) == 1) // No fields were selec
 }
 
 $orderByFields = explode(",", $options['o']); // Get order by options.
-$filterString = $options['f'];
+$filterString = $options['f']; // Get filter string
 $groupByFields = explode(",", $options['g']); // Get group by options.
 
 $transformedData = new TransformedData($data); // Initialize data array for transformations (SELECT, ORDER BY, FILTER
